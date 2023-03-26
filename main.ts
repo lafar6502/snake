@@ -31,9 +31,14 @@ function idzieWaz () {
     k = kolizja()
     if (k == 1) {
         dlugosc += 1
+        punkty += 1
+        music.playSoundEffect(music.createSoundEffect(WaveShape.Square, 400, 600, 255, 0, 100, SoundExpressionEffect.Warble, InterpolationCurve.Linear), SoundExpressionPlayMode.InBackground)
         losujZarcie()
     } else if (k == 2) {
         awaria = 1
+        music.playSoundEffect(music.createSoundEffect(WaveShape.Square, 775, 1, 255, 0, 500, SoundExpressionEffect.None, InterpolationCurve.Linear), SoundExpressionPlayMode.UntilDone)
+        basic.showString("GAME OVER")
+        basic.showNumber(punkty)
         return
     }
     waz.push(snakeX)
@@ -101,6 +106,7 @@ let k = 0
 let awaria = 0
 let snakeX = 0
 let waz: number[] = []
+let punkty = 0
 let dir = 0
 let dlugosc = 0
 let snakeY = 0
@@ -120,6 +126,7 @@ snakeY = 10
 snakeY = 10
 dlugosc = 3
 dir = 1
+punkty = 0
 waz = [snakeX, snakeY]
 losujZarcie()
 serial.redirectToUSB()
@@ -130,5 +137,5 @@ basic.forever(function () {
     rysujWaz()
     setPix(zarcieX, zarcieY, neopixel.rgb(0, 255, 0))
     kopiujEkranDoNeopixel()
-    basic.pause(50)
+    basic.pause(100)
 })
