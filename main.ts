@@ -78,6 +78,7 @@ input.onButtonPressed(Button.B, function () {
 function getPix (x: number, y: number) {
     return ekran[y * szer + x]
 }
+// Losujemy nową pozycję żarcia, tak żeby wylądowała w pustym miejscu ekranu
 function losujZarcie () {
     zarcieY = randint(0, wys - 1)
     zarcieX = randint(0, szer - 1)
