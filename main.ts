@@ -23,8 +23,14 @@ function idzieWaz () {
     } else {
         snakeY += 1
     }
-    snakeX = snakeX % szer
-    snakeY = snakeY % wys
+    snakeX = (snakeX % szer + szer) % szer
+    snakeY = (snakeY % wys + wys) % wys
+    waz.push(snakeX)
+    waz.push(snakeY)
+    while (waz.length > 2 * dlugosc) {
+        waz.shift()
+        waz.shift()
+    }
 }
 function wyczyscEkran () {
     for (let x3 = 0; x3 <= szer * wys; x3++) {
@@ -32,8 +38,13 @@ function wyczyscEkran () {
     }
 }
 input.onButtonPressed(Button.A, function () {
-    dir = (dir - 1) % 4
+    dir = ((dir - 1) % 4 + 4) % 4
 })
+function debug () {
+    serial.writeValue("x", snakeX)
+    serial.writeValue("y", snakeY)
+    serial.writeValue("d", dir)
+}
 input.onButtonPressed(Button.B, function () {
     dir = (dir + 1) % 4
 })
@@ -41,10 +52,17 @@ function getPix (x: number, y: number) {
     return ekran[y * szer + x]
 }
 function rysujWaz () {
-    setPix(snakeX, snakeY, neopixel.rgb(255, 10, 10))
+    indeks = 0
+    while (indeks < waz.length) {
+        setPix(waz[indeks], waz[indeks + 1], neopixel.rgb(255, 3, 144))
+        indeks += 2
+    }
 }
+let indeks = 0
 let snakeX = 0
+let waz: number[] = []
 let dir = 0
+let dlugosc = 0
 let snakeY = 0
 let ekran: number[] = []
 let strip: neopixel.Strip = null
@@ -60,11 +78,16 @@ ekran = [0]
 wyczyscEkran()
 snakeY = 10
 snakeY = 10
+dlugosc = 3
 dir = 1
+waz = [snakeX, snakeY]
+serial.redirectToUSB()
+serial.setBaudRate(BaudRate.BaudRate115200)
 basic.forever(function () {
     idzieWaz()
     wyczyscEkran()
     rysujWaz()
     kopiujEkranDoNeopixel()
-    basic.pause(200)
+    debug()
+    basic.pause(100)
 })
